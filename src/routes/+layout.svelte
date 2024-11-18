@@ -4,12 +4,8 @@
 </script>
 
 <svelte:head>
-  <!-- Icons -->
-  <link rel="icon" href="/favicon.png" />
-
   <!-- SEO Meta Tags -->
   <meta name="author" content="Matthew DeGuzman" />
-  <link rel="icon" href="/favicon.png" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:title" content="Final Review Snacks" />

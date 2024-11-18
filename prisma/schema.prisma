@@ -1,0 +1,106 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  name  String @id
+  emoji String @default("🍽️")
+  votes Int    @default(0)
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Competition {
+  code                                    String   @id
+  name                                    String
+  description                             String?
+  frontpage_url                           String
+  start_date                              DateTime
+  end_date                                DateTime
+  location                                String
+  location_url                            String
+  apply_close                             DateTime
+  apply_open                              DateTime
+  confirm_by                              DateTime
+  decision_release                        DateTime
+  preview                                 DateTime
+  application_id                          String?  @unique
+  Form_Competition_application_idToForm   Form?    @relation("Competition_application_idToForm", fields: [application_id], references: [id])
+  Form_Form_competition_codeToCompetition Form[]   @relation("Form_competition_codeToCompetition")
+}
+
+model Form {
+  id                                             String       @id
+  title                                          String       @default("Untitled Form")
+  created_at                                     DateTime     @default(now())
+  update_at                                      DateTime
+  competition_code                               String
+  is_mlh                                         Boolean      @default(false)
+  sections                                       Json         @default("[]")
+  closes_at                                      DateTime?
+  opens_at                                       DateTime?
+  required_for_checkin                           Boolean      @default(false)
+  is_published                                   Boolean      @default(false)
+  description                                    String?
+  Competition_Competition_application_idToForm   Competition? @relation("Competition_application_idToForm")
+  Competition_Form_competition_codeToCompetition Competition  @relation("Form_competition_codeToCompetition", fields: [competition_code], references: [code])
+  Response                                       Response[]
+}
+
+model Response {
+  id              String   @id
+  submitted_by_id String
+  values          Json
+  form_id         String
+  saved_at        DateTime
+  submitted       Boolean  @default(false)
+  Form            Form     @relation(fields: [form_id], references: [id])
+  User            User     @relation(fields: [submitted_by_id], references: [id])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String     @id
+  name          String?
+  email         String     @unique
+  emailVerified DateTime?
+  image         String?
+  isAdmin       Boolean    @default(false)
+  Account       Account[]
+  Response      Response[]
+  Session       Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}

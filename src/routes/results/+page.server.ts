@@ -5,7 +5,7 @@ export const load: PageServerLoad = async () => {
 	return {
 		categories: await prisma.category.findMany({
 			orderBy: {
-				votes: 'desc',
+				votes: 'desc'
 			}
 		})
 	};

@@ -20,14 +20,11 @@
 <div class="grid h-screen grid-cols-[auto_350px_auto] bg-black text-white">
 	<div class="col-start-2 flex h-full items-center">
 		{#if !formResponse}
-			<form 
-				class="flex flex-col gap-6" 
-				method="POST"
-			>
+			<form class="flex flex-col gap-6" method="POST">
 				<h1 class="text-center text-4xl font-bold">Final Review Snacks</h1>
-				<p class="text-center mb-6">
-					Please select your desired snack for the final exam review this Wednesday. If you cannot eat
-					any/don't like the available options, please enter a snack in the other category!
+				<p class="mb-6 text-center">
+					Please select your desired snack for the final exam review this Wednesday. If you cannot
+					eat any/don't like the available options, please enter a snack in the other category!
 				</p>
 				{#each categories as { name, emoji }}
 					<Category {name} {emoji} selected={name === $selectedCategory} />
@@ -69,9 +66,9 @@
 				</div>
 			</form>
 		{:else if formResponse?.success}
-			<p class="text-green-500 mt-4">success!</p>
+			<p class="mt-4 text-green-500">success!</p>
 		{:else}
-			<p class="text-red-500 mt-4">{formResponse.message}</p>
+			<p class="mt-4 text-red-500">{formResponse.message}</p>
 		{/if}
 	</div>
 </div>

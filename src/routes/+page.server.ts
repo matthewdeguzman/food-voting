@@ -4,7 +4,7 @@ import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-export async function upsertCategory(name: string) {
+async function upsertCategory(name: string) {
 	try {
 		const updatedCategory = await prisma.category.upsert({
 			where: { name },

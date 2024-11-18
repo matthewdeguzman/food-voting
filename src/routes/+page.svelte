@@ -17,6 +17,12 @@
 	});
 </script>
 
+<svelte:head>
+    <title>
+        Final Review | Vote
+    </title>
+</svelte:head>
+
 <div class="grid h-screen grid-cols-[auto_350px_auto] bg-black text-white">
 	<div class="col-start-2 flex h-full items-center">
 		{#if !formResponse}

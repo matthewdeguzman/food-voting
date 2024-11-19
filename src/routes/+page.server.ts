@@ -4,6 +4,7 @@ import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
+
 async function upsertCategory(name: string) {
 	try {
 		const updatedCategory = await prisma.category.upsert({
@@ -26,7 +27,29 @@ async function upsertCategory(name: string) {
 	}
 }
 
+function isOnOrAfterTargetDate(date: Date) {
+	const targetDate = new Date("2024-11-20T00:00:00.000-05:00");
+	const timeZone = "America/New_York";
+
+	const formatter = new Intl.DateTimeFormat("en-US", {
+		timeZone,
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	});
+
+	const formattedInput = formatter.format(date);
+	const formattedTarget = formatter.format(targetDate);
+
+	return formattedInput >= formattedTarget;
+}
+
 export const load: PageServerLoad = async () => {
+	const inputDate = new Date();
+	if (isOnOrAfterTargetDate(inputDate)) {
+		throw redirect(307, '/results');
+	}
+
 	return {
 		categories: await prisma.category.findMany({})
 	};
@@ -34,6 +57,11 @@ export const load: PageServerLoad = async () => {
 
 export const actions = {
 	default: async ({ request }) => {
+		const inputDate = new Date();
+		if (isOnOrAfterTargetDate(inputDate)) {
+			throw redirect(307, '/results');
+		}
+
 		const data = await request.formData();
 		let foodName = data.get('category');
 
